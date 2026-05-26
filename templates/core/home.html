@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Lírion — Plataforma de Leitura Pessoal{% endblock %}
+{% block content %}
+<div class="text-center mt-5 py-5">
+    <h1 style="font-family: Georgia, serif; color: #2D1B69; font-size: 3rem; letter-spacing: 3px;">
+        LÍRION
+    </h1>
+    <p class="text-muted fst-italic mt-2" style="font-family: Georgia, serif; font-size: 1.1rem;">
+        "Os concorrentes conhecem os livros. O Lírion conhece o leitor."
+    </p>
+    {% if user.is_authenticated %}
+        <p class="mt-4">Olá, <strong>{{ user.username }}</strong>!</p>
+        <a href="/livros/buscar/" class="btn mt-2" style="background-color: #6B21A8; color: white;">
+            Buscar livros
+        </a>
+    {% else %}
+        <div class="mt-4 d-flex gap-3 justify-content-center">
+            <a href="/accounts/cadastro/" class="btn" style="background-color: #F59E0B; color: #2D1B69; font-weight: 600;">
+                Criar conta grátis
+            </a>
+            <a href="/accounts/login/" class="btn btn-outline-secondary">
+                Entrar
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
