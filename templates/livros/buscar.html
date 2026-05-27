@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Buscar livros — Lírion{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="font-family: Georgia, serif; color: #2D1B69;">Buscar livros</h2>
+</div>
+
+<form method="get" class="mb-4">
+    <div class="input-group">
+        <input
+            type="text"
+            name="q"
+            value="{{ termo }}"
+            placeholder="Digite título, autor ou assunto..."
+            class="form-control form-control-lg"
+            autofocus
+        >
+        <button type="submit" class="btn btn-lg"
+                style="background-color: #6B21A8; color: white;">
+            Buscar
+        </button>
+    </div>
+</form>
+
+{% if termo and not livros %}
+    <div class="alert alert-warning">
+        Nenhum resultado para "<strong>{{ termo }}</strong>".
+        Tente um termo diferente.
+    </div>
+{% endif %}
+
+<div class="row row-cols-1 row-cols-md-4 g-3">
+{% for livro in livros %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+
+            {% if livro.capa_url %}
+                <img
+                    src="{{ livro.capa_url }}"
+                    class="card-img-top"
+                    alt="Capa de {{ livro.titulo }}"
+                    style="height: 200px; object-fit: cover;"
+                    onerror="this.style.display='none'"
+                >
+            {% else %}
+                <div class="d-flex align-items-center justify-content-center bg-light"
+                     style="height: 200px;">
+                    <span class="text-muted" style="font-size: 2rem;">📚</span>
+                </div>
+            {% endif %}
+
+            <div class="card-body">
+                <h6 class="card-title fw-bold">{{ livro.titulo }}</h6>
+                <p class="card-text text-muted small mb-1">{{ livro.autor }}</p>
+                {% if livro.ano %}
+                    <p class="card-text text-muted small">{{ livro.ano }}</p>
+                {% endif %}
+            </div>
+
+            <div class="card-footer bg-white border-0 pb-3">
+                <form method="post" action="{% url 'livros:adicionar' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="titulo"   value="{{ livro.titulo }}">
+                    <input type="hidden" name="autor"    value="{{ livro.autor }}">
+                    <input type="hidden" name="capa_url" value="{{ livro.capa_url }}">
+                    <input type="hidden" name="isbn"     value="{{ livro.isbn }}">
+                    <input type="hidden" name="ol_key"   value="{{ livro.ol_key }}">
+                    <input type="hidden" name="ano"      value="{{ livro.ano }}">
+
+                    <select name="status" class="form-select form-select-sm mb-2">
+                        <option value="quero_ler">📌 Quero ler</option>
+                        <option value="lendo">📖 Lendo agora</option>
+                        <option value="lido">✅ Já li</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-sm w-100"
+                            style="background-color: #6B21A8; color: white;">
+                        + Adicionar à estante
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

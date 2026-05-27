@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Minha estante — Lírion{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="font-family: Georgia, serif; color: #2D1B69;">Minha estante</h2>
+    <a href="{% url 'livros:buscar' %}" class="btn"
+       style="background-color: #6B21A8; color: white;">
+        + Buscar livro
+    </a>
+</div>
+
+{% include 'livros/_secao_estante.html' with titulo="📖 Lendo agora" livros=lendo cor="#F59E0B" %}
+{% include 'livros/_secao_estante.html' with titulo="✅ Já li" livros=lidos cor="#059669" %}
+{% include 'livros/_secao_estante.html' with titulo="📌 Quero ler" livros=quero_ler cor="#6B21A8" %}
+
+{% endblock %}

@@ -1,0 +1,79 @@
+<div class="mb-5">
+    <h4 class="mb-3" style="color: {{ cor }}; font-family: Georgia, serif;">
+        {{ titulo }} ({{ livros|length }})
+    </h4>
+
+    {% if not livros %}
+        <p class="text-muted fst-italic">Nenhum livro aqui ainda.</p>
+    {% else %}
+        <div class="row row-cols-2 row-cols-md-5 g-3">
+        {% for sl in livros %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+
+                    {% if sl.livro.capa_url %}
+                        <img
+                            src="{{ sl.livro.capa_url }}"
+                            class="card-img-top"
+                            alt="Capa de {{ sl.livro.titulo }}"
+                            style="height: 160px; object-fit: cover;"
+                            onerror="this.style.display='none'"
+                        >
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center bg-light"
+                             style="height: 160px;">
+                            <span style="font-size: 1.5rem;">📚</span>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body p-2">
+                        <p class="small fw-bold mb-1"
+                           style="font-size: 0.8rem; line-height: 1.3;">
+                            {{ sl.livro.titulo|truncatechars:40 }}
+                        </p>
+                        <p class="text-muted mb-0"
+                           style="font-size: 0.72rem;">
+                            {{ sl.livro.autor|truncatechars:30 }}
+                        </p>
+                    </div>
+
+                    <div class="card-footer p-2 bg-white border-0">
+                        <form method="post"
+                              action="{% url 'livros:mudar_status' sl.id %}">
+                            {% csrf_token %}
+                            <select name="status"
+                                    class="form-select form-select-sm mb-1"
+                                    onchange="this.form.submit()">
+                                <option value="quero_ler"
+                                    {% if sl.status == 'quero_ler' %}selected{% endif %}>
+                                    📌 Quero ler
+                                </option>
+                                <option value="lendo"
+                                    {% if sl.status == 'lendo' %}selected{% endif %}>
+                                    📖 Lendo
+                                </option>
+                                <option value="lido"
+                                    {% if sl.status == 'lido' %}selected{% endif %}>
+                                    ✅ Lido
+                                </option>
+                            </select>
+                        </form>
+
+                        <form method="post"
+                              action="{% url 'livros:remover' sl.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-sm w-100 btn-outline-danger"
+                                    style="font-size: 0.75rem;"
+                                    onclick="return confirm('Remover {{ sl.livro.titulo|truncatechars:20 }} da estante?')">
+                                Remover
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+</div>
