@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}{{ livro.titulo }} — Lírion{% endblock %}
+
+{% block content %}
+
+<div class="row mb-4">
+
+  <!-- Capa e metadados do livro -->
+  <div class="col-md-3 text-center">
+    {% if livro.capa_url %}
+      <img src="{{ livro.capa_url }}"
+           alt="Capa de {{ livro.titulo }}"
+           class="img-fluid rounded shadow"
+           style="max-height: 280px;"
+           onerror="this.style.display='none'">
+    {% else %}
+      <div class="bg-light rounded d-flex align-items-center justify-content-center"
+           style="height: 280px;">
+        <span style="font-size: 3rem;">📚</span>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="col-md-9">
+    <h2 style="font-family: Georgia, serif; color: #2D1B69;">
+      {{ livro.titulo }}
+    </h2>
+    {% if livro.autor %}
+      <p class="text-muted fs-5">{{ livro.autor }}</p>
+    {% endif %}
+    {% if livro.ano %}
+      <p class="text-muted small">{{ livro.ano }}</p>
+    {% endif %}
+
+    <!-- Status atual -->
+    {% if status_leitura %}
+      <span class="badge fs-6 mb-3"
+            style="background-color: #6B21A8;">
+        {{ status_leitura.get_status_display }}
+      </span>
+    {% endif %}
+
+    <!-- Botão de concluir — só aparece se status for "lendo" -->
+    {% if status_leitura.status == 'lendo' %}
+      <form method="post"
+            action="{% url 'anotacoes:concluir' livro.id %}">
+        {% csrf_token %}
+        <button type="submit"
+                class="btn d-block mb-2"
+                style="background-color: #F59E0B; color: #2D1B69; font-weight: 600;"
+                onclick="return confirm('Marcar como lido e gerar retrato de leitura?')">
+          ✓ Concluir leitura
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- Formulário de nova anotação -->
+<div class="card mb-4 shadow-sm">
+  <div class="card-header" style="background-color: #EDE9FE;">
+    <h5 class="mb-0" style="color: #2D1B69; font-family: Georgia, serif;">
+      Nova anotação
+    </h5>
+  </div>
+  <div class="card-body">
+    <form method="post" action="{% url 'anotacoes:salvar' livro.id %}">
+      {% csrf_token %}
+      {{ form.texto }}
+      <button type="submit"
+              class="btn mt-3"
+              style="background-color: #6B21A8; color: white;">
+        Salvar anotação
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Lista de anotações existentes -->
+<h4 style="font-family: Georgia, serif; color: #2D1B69;">
+  Suas anotações ({{ anotacoes.count }})
+</h4>
+
+{% if not anotacoes %}
+  <p class="text-muted fst-italic">
+    Nenhuma anotação ainda. Escreva o que está sentindo durante a leitura.
+  </p>
+{% endif %}
+
+{% for anotacao in anotacoes %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <p class="card-text" style="white-space: pre-wrap; line-height: 1.7;">
+        {{ anotacao.texto }}
+      </p>
+    </div>
+    <div class="card-footer d-flex justify-content-between align-items-center
+                bg-white text-muted small">
+      <span>
+        {{ anotacao.data_criacao|date:"d/m/Y \à\s H:i" }}
+        {% if anotacao.data_atualizacao != anotacao.data_criacao %}
+          · editada em {{ anotacao.data_atualizacao|date:"d/m/Y H:i" }}
+        {% endif %}
+      </span>
+      <span>
+        <a href="{% url 'anotacoes:editar' anotacao.pk %}"
+           class="btn btn-sm btn-outline-secondary me-1">
+          Editar
+        </a>
+        <a href="{% url 'anotacoes:deletar' anotacao.pk %}"
+           class="btn btn-sm btn-outline-danger">
+          Deletar
+        </a>
+      </span>
+    </div>
+  </div>
+{% endfor %}
+
+{% endblock %}

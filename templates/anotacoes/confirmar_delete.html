@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Deletar anotação — Lírion{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+
+    <div class="card border-danger shadow-sm">
+      <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Deletar esta anotação?</h5>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-3">
+          Essa ação não pode ser desfeita.
+        </p>
+        <!-- Prévia do texto que vai ser deletado -->
+        <div class="p-3 bg-light rounded mb-4"
+             style="font-style: italic; color: #4B5563;">
+          "{{ anotacao.texto|truncatechars:150 }}"
+        </div>
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex gap-2">
+            <button type="submit"
+                    class="btn btn-danger">
+              Sim, deletar
+            </button>
+            <a href="{% url 'anotacoes:pagina_livro' anotacao.livro.id %}"
+               class="btn btn-outline-secondary">
+              Cancelar
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

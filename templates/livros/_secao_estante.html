@@ -59,6 +59,12 @@
                             </select>
                         </form>
 
+                        <a href="{% url 'anotacoes:pagina_livro' sl.livro.id %}"
+                           class="btn btn-sm w-100 btn-outline-primary mb-1"
+                           style="font-size: 0.75rem;">
+                            📝 Ver diário
+                        </a>
+
                         <form method="post"
                               action="{% url 'livros:remover' sl.id %}">
                             {% csrf_token %}

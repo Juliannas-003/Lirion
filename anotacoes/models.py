@@ -22,4 +22,4 @@ class Anotacao(models.Model):
         ordering = ['-data_criacao']
 
     def __str__(self):
-        return f"Anotação de {self.usuario} em {self.livro.titulo}"
+        return f"Anotação de {self.usuario.username} para {self.livro.titulo}" # atualização depois do forms pra mostrar o título do livro ao invés do id
