@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Meu plano de leitura — Lírion{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-9">
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <h2 style="font-family: Georgia, serif; color: #2D1B69;">
+          Plano de leitura mensal
+        </h2>
+        <p class="text-muted small mb-0">
+          Gerado em {{ plano.data_geracao|date:"d/m/Y \à\s H:i" }}
+          · {{ plano.quantidade_livros }} livro{{ plano.quantidade_livros|pluralize }}
+          · {{ plano.duracao_estimada_dias }} dias estimados
+        </p>
+        {% if generos %}
+          <div class="mt-2">
+            {% for g in generos %}
+              <span class="badge me-1"
+                    style="background-color: #EDE9FE; color: #6B21A8;">
+                {{ g.genero }}
+              </span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <a href="{% url 'retratos:criar_plano' %}"
+         class="btn btn-outline-primary btn-sm">
+        Novo plano
+      </a>
+    </div>
+
+    <div class="p-4 rounded-3 mb-4"
+         style="background: #F9FAFB; border: 1px solid #E5E7EB;
+                line-height: 1.8; white-space: pre-wrap;">
+      {{ plano.conteudo_ia }}
+    </div>
+
+    {% if plano.texto_livre %}
+      <p class="text-muted small fst-italic">
+        Contexto informado: "{{ plano.texto_livre }}"
+      </p>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

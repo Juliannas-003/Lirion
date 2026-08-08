@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Plano de leitura — Lírion{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+
+    <h2 style="font-family: Georgia, serif; color: #2D1B69;" class="mb-1">
+      Plano de leitura mensal
+    </h2>
+    <p class="text-muted mb-4">
+      O Lírion vai criar um plano personalizado baseado no seu ritmo de leitura
+      e no seu histórico emocional.
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label class="form-label fw-bold">{{ form.paginas_por_hora.label }}</label>
+          {{ form.paginas_por_hora }}
+          <div class="form-text">Média honesta — nem rápido nem devagar demais</div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">{{ form.horas_por_dia.label }}</label>
+          {{ form.horas_por_dia }}
+          <div class="form-text">Horas que você realmente consegue ler</div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">{{ form.quantidade_livros.label }}</label>
+          {{ form.quantidade_livros }}
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-bold">{{ form.generos.label }}</label>
+        <div class="row row-cols-2 row-cols-md-3 g-2 mt-1">
+          {% for checkbox in form.generos %}
+            <div class="col">
+              <div class="form-check">
+                {{ checkbox.tag }}
+                <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                  {{ checkbox.choice_label }}
+                </label>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-bold">{{ form.texto_livre.label }}</label>
+        {{ form.texto_livre }}
+        <div class="form-text">
+          Descreva subgêneros, atmosfera que busca, personagens, temas. Quanto mais detalhe,
+          melhor a recomendação 🪻
+        </div>
+      </div>
+
+      <button type="submit" id="btn-gerar"
+              class="btn"
+              style="background-color: #6B21A8; color: white;"
+              onclick="mostrarLoading()">
+        <span id="texto-btn">Gerar meu plano</span>
+        <span id="spinner"
+              class="spinner-border spinner-border-sm ms-2 d-none"></span>
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+function mostrarLoading() {
+  document.getElementById('texto-btn').textContent = 'Gerando plano...';
+  document.getElementById('spinner').classList.remove('d-none');
+  document.getElementById('btn-gerar').disabled = true;
+}
+</script>
+{% endblock %}

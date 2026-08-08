@@ -90,7 +90,6 @@ def deletar_anotacao(request, pk):
         'anotacao': anotacao
     })
 
-
 @login_required
 def concluir_leitura(request, livro_id):
     if request.method != 'POST':
@@ -98,18 +97,14 @@ def concluir_leitura(request, livro_id):
 
     livro = get_object_or_404(Livro, id=livro_id)
 
-    # Verifica se tem anotações antes de concluir
-    
     anotacoes = Anotacao.objects.filter(usuario=request.user, livro=livro)
     if not anotacoes.exists():
         messages.warning(
             request,
-            'Adicione pelo menos uma anotação antes de concluir a leitura. '
-            'As anotações são usadas para gerar seu retrato emocional.'
+            'Adicione pelo menos uma anotação antes de concluir a leitura.'
         )
         return redirect('anotacoes:pagina_livro', livro_id=livro_id)
 
-    # mudando o status para lido2
     StatusLeitura.objects.filter(
         usuario=request.user,
         livro=livro
@@ -117,7 +112,8 @@ def concluir_leitura(request, livro_id):
 
     messages.success(
         request,
-        f'"{livro.titulo}" marcado como lido! '
-        'O retrato emocional estará disponível em breve.'
+        f'"{livro.titulo}" marcado como lido! Gerando seu retrato emocional...'
     )
-    return redirect('livros:estante')
+
+    # ← Esta linha é o que estava faltando
+    return redirect('retratos:ver_retrato', livro_id=livro_id)

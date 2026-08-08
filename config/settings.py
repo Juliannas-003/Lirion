@@ -22,7 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Segurança — valores vêm do .env, nunca hardcoded
 SECRET_KEY = os.getenv('SECRET_KEY', 'chave-local-insegura-apenas-dev')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
-# falta API key p/ produção
+
+
+
+# CHACVE API
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+
+
+# HOSTS
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 

@@ -21,53 +21,99 @@
     {% endif %}
   </div>
 
+  <!-- Informações do livro -->
   <div class="col-md-9">
+
     <h2 style="font-family: Georgia, serif; color: #2D1B69;">
       {{ livro.titulo }}
     </h2>
+
     {% if livro.autor %}
       <p class="text-muted fs-5">{{ livro.autor }}</p>
     {% endif %}
+
     {% if livro.ano %}
       <p class="text-muted small">{{ livro.ano }}</p>
     {% endif %}
 
-    <!-- Status atual -->
     {% if status_leitura %}
-      <span class="badge fs-6 mb-3"
-            style="background-color: #6B21A8;">
-        {{ status_leitura.get_status_display }}
-      </span>
+      <div class="d-flex align-items-center gap-3 mt-3 flex-wrap">
+
+        <!-- Alterar status -->
+        <form method="post" action="{% url 'livros:mudar_status' status_leitura.id %}">
+          {% csrf_token %}
+          <select name="status"
+                  class="form-select form-select-sm"
+                  style="width: auto;"
+                  onchange="this.form.submit()">
+
+            <option value="quero_ler"
+              {% if status_leitura.status == 'quero_ler' %}selected{% endif %}>
+              📌 Quero ler
+            </option>
+
+            <option value="lendo"
+              {% if status_leitura.status == 'lendo' %}selected{% endif %}>
+              📖 Lendo
+            </option>
+
+            <option value="lido"
+              {% if status_leitura.status == 'lido' %}selected{% endif %}>
+              ✅ Lido
+            </option>
+
+          </select>
+        </form>
+
+        <!-- Botão concluir -->
+        {% if status_leitura.status == 'lendo' %}
+          <form method="post" action="{% url 'anotacoes:concluir' livro.id %}">
+            {% csrf_token %}
+            <button type="submit"
+                    class="btn btn-sm"
+                    style="background-color: #F59E0B; color: #2D1B69; font-weight: 600;"
+                    onclick="return confirm('Marcar como lido e gerar retrato emocional?')">
+              ✓ Concluir leitura
+            </button>
+          </form>
+        {% endif %}
+
+      </div>
+
+    {% else %}
+
+      <!-- Livro ainda não está na estante -->
+      <div class="mt-3">
+        <p class="text-muted small">
+          Este livro não está na sua estante.
+        </p>
+
+        <a href="{% url 'livros:buscar' %}"
+           class="btn btn-sm btn-outline-primary">
+          + Adicionar à estante
+        </a>
+      </div>
+
     {% endif %}
 
-    <!-- Botão de concluir — só aparece se status for "lendo" -->
-    {% if status_leitura.status == 'lendo' %}
-      <form method="post"
-            action="{% url 'anotacoes:concluir' livro.id %}">
-        {% csrf_token %}
-        <button type="submit"
-                class="btn d-block mb-2"
-                style="background-color: #F59E0B; color: #2D1B69; font-weight: 600;"
-                onclick="return confirm('Marcar como lido e gerar retrato de leitura?')">
-          ✓ Concluir leitura
-        </button>
-      </form>
-    {% endif %}
   </div>
 
 </div>
 
-<!-- Formulário de nova anotação -->
+<!-- Nova anotação -->
 <div class="card mb-4 shadow-sm">
   <div class="card-header" style="background-color: #EDE9FE;">
     <h5 class="mb-0" style="color: #2D1B69; font-family: Georgia, serif;">
       Nova anotação
     </h5>
   </div>
+
   <div class="card-body">
     <form method="post" action="{% url 'anotacoes:salvar' livro.id %}">
       {% csrf_token %}
+
       {{ form.texto }}
+
       <button type="submit"
               class="btn mt-3"
               style="background-color: #6B21A8; color: white;">
@@ -77,7 +123,7 @@
   </div>
 </div>
 
-<!-- Lista de anotações existentes -->
+<!-- Lista de anotações -->
 <h4 style="font-family: Georgia, serif; color: #2D1B69;">
   Suas anotações ({{ anotacoes.count }})
 </h4>
@@ -90,31 +136,40 @@
 
 {% for anotacao in anotacoes %}
   <div class="card mb-3 shadow-sm">
+
     <div class="card-body">
-      <p class="card-text" style="white-space: pre-wrap; line-height: 1.7;">
+      <p class="card-text"
+         style="white-space: pre-wrap; line-height: 1.7;">
         {{ anotacao.texto }}
       </p>
     </div>
-    <div class="card-footer d-flex justify-content-between align-items-center
-                bg-white text-muted small">
+
+    <div class="card-footer d-flex justify-content-between align-items-center bg-white text-muted small">
+
       <span>
-        {{ anotacao.data_criacao|date:"d/m/Y \à\s H:i" }}
+        {{ anotacao.data_criacao|date:"d/m/Y \\à\\s H:i" }}
+
         {% if anotacao.data_atualizacao != anotacao.data_criacao %}
           · editada em {{ anotacao.data_atualizacao|date:"d/m/Y H:i" }}
         {% endif %}
       </span>
+
       <span>
         <a href="{% url 'anotacoes:editar' anotacao.pk %}"
            class="btn btn-sm btn-outline-secondary me-1">
           Editar
         </a>
+
         <a href="{% url 'anotacoes:deletar' anotacao.pk %}"
            class="btn btn-sm btn-outline-danger">
           Deletar
         </a>
       </span>
+
     </div>
+
   </div>
 {% endfor %}
 
 {% endblock %}
+

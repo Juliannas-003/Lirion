@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Retrato emocional — {{ livro.titulo }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+
+    <div class="d-flex align-items-start gap-4 mb-4">
+      {% if livro.capa_url %}
+        <img src="{{ livro.capa_url }}"
+             style="width: 80px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
+             onerror="this.style.display='none'">
+      {% endif %}
+      <div>
+        <h2 style="font-family: Georgia, serif; color: #2D1B69;">
+          {{ livro.titulo }}
+        </h2>
+        <p class="text-muted mb-0">{{ livro.autor }}</p>
+        <small class="text-muted">
+          Retrato gerado em {{ retrato.data_geracao|date:"d/m/Y \à\s H:i" }}
+        </small>
+      </div>
+    </div>
+
+    <div class="p-4 rounded-3 mb-4"
+         style="background: linear-gradient(135deg, #2D1B69, #6B21A8);
+                color: white; line-height: 1.8; font-family: Georgia, serif;
+                font-size: 1.05rem;">
+      {{ retrato.conteudo|linebreaks }}
+    </div>
+
+    <div class="d-flex gap-2">
+      <a href="{% url 'anotacoes:pagina_livro' livro.id %}"
+         class="btn btn-outline-secondary">
+        ← Ver anotações
+      </a>
+      <a href="{% url 'livros:estante' %}"
+         class="btn btn-outline-primary">
+        Minha estante
+      </a>
+      <a href="{% url 'retratos:criar_plano' %}"
+         class="btn"
+         style="background-color: #F59E0B; color: #2D1B69; font-weight: 600;">
+        Gerar plano de leitura
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
