@@ -86,3 +86,8 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 LOGIN_URL = '/accounts/login/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+## configurações de perfil
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'lirion@ifba.edu.br'
