@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block title %}Meu plano de leitura — Lírion{% endblock %}
-
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-md-9">
@@ -32,11 +31,27 @@
       </a>
     </div>
 
-    <div class="p-4 rounded-3 mb-4"
+    <style>
+    #plano-markdown h1, #plano-markdown h2, #plano-markdown h3 {
+        font-family: Georgia, serif; color: #2D1B69;
+    }
+    #plano-markdown strong { color: #6B21A8; }
+    #plano-markdown ul, #plano-markdown ol { padding-left: 1.4rem; }
+    </style>
+
+    <div id="plano-markdown"
+         class="p-4 rounded-3 mb-4"
          style="background: #F9FAFB; border: 1px solid #E5E7EB;
-                line-height: 1.8; white-space: pre-wrap;">
-      {{ plano.conteudo_ia }}
+                font-family: Georgia, serif; font-size: 1.1rem; line-height: 1.9;">
     </div>
+
+    {{ plano.conteudo_ia|json_script:"plano-raw" }}
+
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+    <script>
+        const textoPlano = JSON.parse(document.getElementById('plano-raw').textContent);
+        document.getElementById('plano-markdown').innerHTML = marked.parse(textoPlano);
+    </script>
 
     {% if plano.texto_livre %}
       <p class="text-muted small fst-italic">

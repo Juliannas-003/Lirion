@@ -67,7 +67,8 @@
 
         <!-- Botão concluir -->
         {% if status_leitura.status == 'lendo' %}
-          <form method="post" action="{% url 'anotacoes:concluir' livro.id %}">
+          <form method="post" action="{% url 'anotacoes:concluir' livro.id %}"
+          onsubmit="lirionShowLoading('Gerando seu retrato emocional...')">
             {% csrf_token %}
             <button type="submit"
                     class="btn btn-sm"

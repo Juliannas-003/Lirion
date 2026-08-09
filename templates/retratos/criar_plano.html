@@ -1,79 +1,68 @@
 {% extends 'base.html' %}
-{% block title %}Plano de leitura — Lírion{% endblock %}
-
+{% block title %}Plano de leitura mensal — Lírion{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-md-8">
-
-    <h2 style="font-family: Georgia, serif; color: #2D1B69;" class="mb-1">
-      Plano de leitura mensal
-    </h2>
+  <div class="col-md-10">
+    <h2 style="font-family: Georgia, serif; color: #2D1B69;">Plano de leitura mensal</h2>
     <p class="text-muted mb-4">
-      O Lírion vai criar um plano personalizado baseado no seu ritmo de leitura
-      e no seu histórico emocional.
+      O Lírion vai criar um plano personalizado baseado no seu ritmo de leitura e no seu histórico emocional.
     </p>
 
-    <form method="post">
+    <form method="post" onsubmit="lirionShowLoading('Montando seu plano de leitura personalizado...')">
       {% csrf_token %}
 
       <div class="row g-3 mb-4">
-        <div class="col-md-4">
-          <label class="form-label fw-bold">{{ form.paginas_por_hora.label }}</label>
+        <div class="col-12 col-md-4">
+          <label for="{{ form.paginas_por_hora.id_for_label }}" class="form-label fw-semibold">
+            Quantas páginas você lê por hora?
+          </label>
           {{ form.paginas_por_hora }}
           <div class="form-text">Média honesta — nem rápido nem devagar demais</div>
         </div>
-        <div class="col-md-4">
-          <label class="form-label fw-bold">{{ form.horas_por_dia.label }}</label>
+        <div class="col-12 col-md-4">
+          <label for="{{ form.horas_por_dia.id_for_label }}" class="form-label fw-semibold">
+            Quantas horas por dia você tem para ler?
+          </label>
           {{ form.horas_por_dia }}
           <div class="form-text">Horas que você realmente consegue ler</div>
         </div>
-        <div class="col-md-4">
-          <label class="form-label fw-bold">{{ form.quantidade_livros.label }}</label>
+        <div class="col-12 col-md-4">
+          <label for="{{ form.quantidade_livros.id_for_label }}" class="form-label fw-semibold">
+            Quantos livros quer ler no mês?
+          </label>
           {{ form.quantidade_livros }}
+          <div class="form-text">&nbsp;</div>
         </div>
       </div>
 
-      <div class="mb-4">
-        <label class="form-label fw-bold">{{ form.generos.label }}</label>
-        <div class="row row-cols-2 row-cols-md-3 g-2 mt-1">
-          {% for checkbox in form.generos %}
-            <div class="col">
-              <div class="form-check">
-                {{ checkbox.tag }}
-                <label class="form-check-label" for="{{ checkbox.id_for_label }}">
-                  {{ checkbox.choice_label }}
-                </label>
-              </div>
+      <label class="form-label fw-semibold">Gêneros de interesse</label>
+      <div class="row g-2 mb-4">
+        {% for checkbox in form.generos %}
+          <div class="col-6 col-md-4">
+            <div class="form-check">
+              {{ checkbox.tag }}
+              <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                {{ checkbox.choice_label }}
+              </label>
             </div>
-          {% endfor %}
-        </div>
+          </div>
+        {% endfor %}
       </div>
 
       <div class="mb-4">
-        <label class="form-label fw-bold">{{ form.texto_livre.label }}</label>
+        <label for="{{ form.texto_livre.id_for_label }}" class="form-label fw-semibold">
+          Conte mais sobre o que você quer ler
+        </label>
         {{ form.texto_livre }}
         <div class="form-text">
-          Descreva subgêneros, atmosfera que busca, personagens, temas. Quanto mais detalhe,
-          melhor a recomendação 🪻
+          Descreva subgêneros, atmosfera que busca, personagens, temas. Quanto mais detalhe, melhor a recomendação
         </div>
       </div>
 
-      <button type="submit" 
-              class="btn mt-2"
-              style="background-color: #6B21A8; color: white; padding: 10px 28px;"
-              >
+      <button type="submit" class="btn" style="background-color: #6B21A8; color: white;">
         Gerar meu plano
       </button>
     </form>
-
   </div>
 </div>
-
-<script>
-function mostrarLoading() {
-  document.getElementById('texto-btn').textContent = 'Gerando plano...';
-  document.getElementById('spinner').classList.remove('d-none');
-  document.getElementById('btn-gerar').disabled = true;
-}
-</script>
 {% endblock %}
