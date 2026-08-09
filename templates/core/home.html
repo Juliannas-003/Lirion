@@ -1,27 +1,175 @@
 {% extends 'base.html' %}
-{% block title %}Lírion — Plataforma de Leitura Pessoal{% endblock %}
+{% load static %}
+{% block title %}Lírion — Sua leitura, sua história{% endblock %}
+
 {% block content %}
-<div class="text-center mt-5 py-5">
-    <h1 style="font-family: Georgia, serif; color: #2D1B69; font-size: 3rem; letter-spacing: 3px;">
-        LÍRION
-    </h1>
-    <p class="text-muted fst-italic mt-2" style="font-family: Georgia, serif; font-size: 1.1rem;">
-        "Os concorrentes conhecem os livros. O Lírion conhece o leitor."
-    </p>
+<style>
+  .lirion-hero {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    margin-left: -50vw;
+    margin-top: -1.5rem;
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background-image:
+      linear-gradient(160deg, rgba(30,10,60,0.55), rgba(45,27,105,0.35)),
+      url("{% static 'img/lirion_bg.png' %}");
+    background-repeat: repeat;
+    background-size: 640px auto;
+    background-attachment: fixed;
+  }
+
+  .lirion-card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 18px;
+    box-shadow: 0 25px 60px rgba(30, 10, 60, 0.35);
+    max-width: 920px;
+    width: 100%;
+    padding: 2.5rem 2.5rem 2rem;
+  }
+
+  .lirion-card img.lirion-logo {
+    display: block;
+    margin: 0 auto 1.5rem;
+    width: 130px;
+    height: auto;
+  }
+
+  .lirion-greeting {
+    text-align: center;
+    color: #6B21A8;
+    font-family: Georgia, serif;
+    font-style: italic;
+    margin-bottom: 1.75rem;
+  }
+
+  .lirion-split {
+    display: flex;
+    border-top: 1px solid #E5D9F5;
+    border-bottom: 1px solid #E5D9F5;
+    margin-bottom: 2rem;
+  }
+
+  .lirion-split > div {
+    flex: 1;
+    padding: 1.75rem;
+  }
+
+  .lirion-split > div:first-child {
+    border-right: 1px solid #E5D9F5;
+  }
+
+  .lirion-split h3 {
+    font-family: Georgia, serif;
+    color: #2D1B69;
+    font-size: 1.15rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .lirion-split p, .lirion-split li {
+    color: #4B5563;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .lirion-split ul {
+    padding-left: 1.1rem;
+    margin-bottom: 0;
+  }
+
+  .lirion-cta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .lirion-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.65rem 1.6rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .lirion-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+
+  .lirion-btn:focus-visible {
+    outline: 3px solid #2D1B69;
+    outline-offset: 2px;
+  }
+
+  .lirion-btn-roxo { background-color: #6B21A8; color: #fff; }
+  .lirion-btn-amarelo { background-color: #F59E0B; color: #2D1B69; }
+
+  @media (max-width: 767px) {
+    .lirion-split { flex-direction: column; }
+    .lirion-split > div:first-child { border-right: none; border-bottom: 1px solid #E5D9F5; }
+    .lirion-cta { grid-template-columns: 1fr; }
+    .lirion-card { padding: 2rem 1.5rem 1.5rem; }
+    .lirion-hero { background-attachment: scroll; }
+  }
+</style>
+
+<div class="lirion-hero">
+  <div class="lirion-card">
+    <img src="{% static 'img/lirion_logo.png' %}" alt="Lírion" class="lirion-logo">
+
     {% if user.is_authenticated %}
-        <p class="mt-4">Olá, <strong>{{ user.username }}</strong>!</p>
-        <a href="/livros/buscar/" class="btn mt-2" style="background-color: #6B21A8; color: white;">
-            Buscar livros
-        </a>
-    {% else %}
-        <div class="mt-4 d-flex gap-3 justify-content-center">
-            <a href="/accounts/cadastro/" class="btn" style="background-color: #F59E0B; color: #2D1B69; font-weight: 600;">
-                Criar conta grátis
-            </a>
-            <a href="/accounts/login/" class="btn btn-outline-secondary">
-                Entrar
-            </a>
-        </div>
+      <p class="lirion-greeting">Que bom te ver de novo, {{ user.username }}.</p>
     {% endif %}
+
+    <div class="lirion-split">
+      <div>
+        <h3>A proposta</h3>
+        <p>
+          O Lírion não é só uma lista de livros lidos. É um espaço pra
+          guardar o que cada leitura despertou em você: as dúvidas, os
+          incômodos, as trechos que grudaram. Com o tempo, essas anotações
+          viram retratos emocionais e sugestões de leitura que fazem
+          sentido pra quem você é, não pra um algoritmo genérico.
+        </p>
+      </div>
+      <div>
+        <h3>O que você encontra aqui</h3>
+        <ul>
+          <li>Retrato emocional gerado por IA a partir das suas anotações</li>
+          <li>Plano de leitura mensal personalizado ao seu ritmo</li>
+          <li>Estante organizada por status de leitura</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lirion-cta">
+      {% if user.is_authenticated %}
+        <a href="{% url 'retratos:criar_plano' %}" class="lirion-btn lirion-btn-roxo">
+          Gerar plano de leitura <span>✧</span>
+        </a>
+        <a href="{% url 'livros:buscar' %}" class="lirion-btn lirion-btn-amarelo">
+          Buscar livros <span>✧</span>
+        </a>
+      {% else %}
+        <a href="/accounts/cadastro/" class="lirion-btn lirion-btn-amarelo">
+          Criar conta grátis <span>✧</span>
+        </a>
+        <a href="/accounts/login/" class="lirion-btn lirion-btn-roxo">
+          Entrar <span>✧</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endblock %}
