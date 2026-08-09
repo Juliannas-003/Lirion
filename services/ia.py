@@ -1,14 +1,15 @@
-import google.generativeai as genai
+from google import genai
 from django.conf import settings
 
-genai.configure(api_key=settings.GEMINI_API_KEY)
+client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
-def _get_model():
-    return genai.GenerativeModel(
-        'gemini-1.5-flash',
-        generation_config=genai.types.GenerationConfig(
-            max_output_tokens=1000,
-        )
+# substituição do getmodel antigo (variável model name e função generate
+MODEL_NAME = "gemini-3.5-flash"
+
+def _generate(prompt):
+    return client.models.generate_content(
+        model=MODEL_NAME,
+        contents=prompt,
     )
 
 
@@ -49,11 +50,11 @@ Não faça uma análise fria, escreva como alguém que conhece os padrões dos l
 
     """
 
+
     try:
-        model = _get_model()
-        resposta = model.generate_content(prompt,
-    request_options={'timeout': 30})
+        resposta = _generate(prompt)
         return resposta.text
+
     except Exception as e:
         print(f'Erro Gemini API (retrato): {e}')
         return None
@@ -131,11 +132,12 @@ REGRAS:
 Formate a resposta de forma clara com os livros numerados.
     """
 
+    
+
     try:
-        model = _get_model()
-        resposta = model.generate_content(prompt,
-    request_options={'timeout': 30})
+        resposta = _generate(prompt)
         return resposta.text, duracao_estimada
+
     except Exception as e:
         print(f'Erro Gemini API (plano): {e}')
         return None, None
