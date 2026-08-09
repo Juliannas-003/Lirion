@@ -5,9 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Lírion{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/lirion.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"> 
+    <style>
+        .lirion-strip {
+            width: 100%;
+            height: 34px;
+            background-image: url("{% static 'img/lirion_bg.png' %}");
+            background-repeat: repeat;
+            background-size: 220px auto;
+            background-position: center top;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15) inset;
+        }
+
+        .container h2::before {
+            content: "✧";
+            color: #F59E0B;
+            font-size: 0.8em;
+            margin-right: 0.4rem;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2D1B69;">
@@ -20,6 +39,7 @@
                     <a class="nav-link text-white-50" href="{% url 'livros:buscar' %}">Buscar livro</a>
                     <a class="nav-link text-white-50" href="{% url 'livros:estante' %}">Minha estante</a>
                     <a class="nav-link text-white-50" href="{% url 'retratos:criar_plano' %}">Plano de leitura</a>
+
                     <div class="dropdown ms-3">
                         <button class="btn btn-link nav-link text-white p-0 dropdown-toggle"
                                 type="button" data-bs-toggle="dropdown" aria-expanded="false"
@@ -37,7 +57,7 @@
                                 <form method="post" action="/accounts/logout/" class="m-0">
                                     {% csrf_token %}
                                     <button type="submit" class="dropdown-item text-danger">
-                                            <i class="bi bi-x-circle me-2"></i>Sair
+                                        <i class="bi bi-x-circle me-2"></i>Sair
                                     </button>
                                 </form>
                             </li>
@@ -50,6 +70,8 @@
             </div>
         </div>
     </nav>
+
+    <div class="lirion-strip"></div>
 
     <div class="container mt-4">
         {% if messages %}
@@ -66,22 +88,5 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-    <div id="lirion-loading-overlay" class="d-none"
-        style="position:fixed; inset:0; background:rgba(45,27,105,0.94);
-            z-index:2000; display:flex; align-items:center;
-            justify-content:center; flex-direction:column;">
-        <div class="spinner-border" style="width:3.5rem; height:3.5rem; color:#F59E0B;" role="status"></div>
-        <p id="lirion-loading-text" class="mt-3 text-white"
-            style="font-family: Georgia, serif; font-size:1.1rem;">Gerando...</p>
-    </div>
-
-    <script>
-    function lirionShowLoading(mensagem) {
-        document.getElementById('lirion-loading-text').textContent = mensagem;
-        document.getElementById('lirion-loading-overlay').classList.remove('d-none');
-    }
-    </script>
 </body>
 </html>
