@@ -42,7 +42,8 @@ def adicionar(request):
     capa_url = request.POST.get('capa_url', '').strip()
     isbn     = request.POST.get('isbn', '').strip()
     ol_key   = request.POST.get('ol_key', '').strip()
-    ano      = request.POST.get('ano') or None
+    ano_raw  = request.POST.get('ano', '').strip()
+    ano      = int(ano_raw) if ano_raw.isdigit() else None
     status   = request.POST.get('status', 'quero_ler')
 
     if not titulo:
