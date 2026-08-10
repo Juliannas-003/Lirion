@@ -5,6 +5,7 @@ app_name = 'retratos'
 
 urlpatterns = [
     path('retrato/<int:livro_id>/', views.ver_retrato, name='ver_retrato'),
+    path('meus-retratos/', views.meus_retratos, name='meus_retratos'),
     path('plano/', views.criar_plano, name='criar_plano'),
     path('plano/<int:plano_id>/', views.ver_plano, name='ver_plano'),
     path('historico/', views.historico_planos, name='historico'),

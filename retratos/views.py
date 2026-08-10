@@ -130,3 +130,13 @@ def historico_planos(request):
         usuario=request.user
     ).prefetch_related('generos')
     return render(request, 'retratos/historico.html', {'planos': planos})
+
+
+@login_required
+def meus_retratos(request):
+    retratos = Retrato.objects.filter(
+        usuario=request.user
+    ).select_related('livro')
+    return render(request, 'retratos/meus_retratos.html', {
+        'retratos': retratos,
+    })

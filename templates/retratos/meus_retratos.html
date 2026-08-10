@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Meus retratos — Lírion{% endblock %}
+{% block content %}
+<h2 style="font-family: Georgia, serif; color: #2D1B69;">Meus retratos emocionais</h2>
+
+{% if not retratos %}
+  <p class="text-muted fst-italic mt-3">
+    Nenhum retrato gerado ainda. Conclua a leitura de um livro com anotações pra gerar o primeiro.
+  </p>
+{% else %}
+  <div class="row row-cols-1 row-cols-md-2 g-4 mt-2">
+    {% for retrato in retratos %}
+      <div class="col">
+        <a href="{% url 'retratos:ver_retrato' retrato.livro.id %}" class="text-decoration-none">
+          <div class="p-4 rounded-3 h-100"
+               style="background: linear-gradient(135deg, #2D1B69, #6B21A8); color: white;">
+            <h5 style="font-family: Georgia, serif;">{{ retrato.livro.titulo }}</h5>
+            <p class="small mb-2" style="opacity: 0.85;">{{ retrato.livro.autor }}</p>
+            <p class="small" style="opacity: 0.7;">Gerado em {{ retrato.data_geracao|date:"d/m/Y" }}</p>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}
