@@ -5,14 +5,15 @@ HEADERS = {
 }
 
 def buscar_livro(termo):
-    """
-    Busca livros na Open Library API.
-    Retorna lista de dicts ou lista vazia em caso de falha.
-    """
     try:
         resposta = requests.get(
             "https://openlibrary.org/search.json",
-            params={"q": termo, "limit": 8},
+            params={
+                "q": termo,
+                "limit": 8,
+                "lang": "pt",  # pede pra OL escolher a edição em português quando existir
+                "fields": "key,title,author_name,cover_i,first_publish_year,isbn,language",
+            },
             headers=HEADERS,
             timeout=5
         )
@@ -20,8 +21,11 @@ def buscar_livro(termo):
         if resposta.status_code != 200:
             return []
 
+        docs = resposta.json().get("docs", [])
+        docs = sorted(docs, key=lambda d: 0 if 'por' in d.get('language', []) else 1)
+
         livros = []
-        for doc in resposta.json().get("docs", []):
+        for doc in docs:
             cover_id = doc.get("cover_i")
             livros.append({
                 "titulo":   doc.get("title", ""),
